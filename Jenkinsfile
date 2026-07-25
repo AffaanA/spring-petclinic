@@ -10,6 +10,16 @@ pipeline {
             }
         }
 
+stage('Environment') {
+            steps {
+                sh 'whoami'
+                sh 'echo JAVA_HOME=$JAVA_HOME'
+                sh 'which java'
+                sh 'java -version'
+                sh './mvnw -version'
+            }
+        }
+
         stage('Build') {
             steps {
                 echo 'Building Spring PetClinic...'
