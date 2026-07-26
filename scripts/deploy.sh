@@ -13,11 +13,13 @@ echo "=================================="
 
 echo "[1/4] Copying JAR to server..."
 
-scp "$JAR_FILE" ${APP_SERVER}:/tmp/petclinic.jar
+scp -i ~/.ssh/id_ed25519_deploy \
+    "$JAR_FILE" \
+    ${APP_SERVER}:/tmp/petclinic.jar
 
 echo "[2/4] Installing application..."
 
-ssh ${APP_SERVER} <<EOF
+ssh -i ~/.ssh/id_ed25519_deploy ${APP_SERVER}
 sudo mv /tmp/petclinic.jar ${APP_DIR}/petclinic.jar
 sudo chown petclinic:petclinic ${APP_DIR}/petclinic.jar
 EOF
