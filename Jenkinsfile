@@ -10,13 +10,14 @@ pipeline {
             }
         }
 
-stage('Environment') {
+        stage('Environment') {
             steps {
                 sh 'whoami'
                 sh 'echo JAVA_HOME=$JAVA_HOME'
                 sh 'which java'
                 sh 'java -version'
                 sh './mvnw -version'
+                sh 'docker --version'
             }
         }
 
@@ -28,11 +29,25 @@ stage('Environment') {
             }
         }
 
-  stage('Deploy') {
+        stage('Build Docker Image') {
             steps {
-                sh './scripts/deploy.sh'
+                echo 'Building Docker image...'
+                sh 'docker build -t petclinic:latest .'
             }
         }
+
+        stage('Verify Docker Image') {
+            steps {
+                sh 'docker images'
+            }
+        }
+
+        // stage('Deploy') {
+        //     steps {
+        //         sh './scripts/deploy.sh'
+        //     }
+        // }
+
     }
 
     post {
