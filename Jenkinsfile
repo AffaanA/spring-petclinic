@@ -27,6 +27,12 @@ stage('Environment') {
                 sh './mvnw clean package'
             }
         }
+
+  stage('Deploy') {
+            steps {
+                sh './scripts/deploy.sh'
+            }
+        }
     }
 
     post {
