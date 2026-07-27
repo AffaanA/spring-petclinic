@@ -2,7 +2,7 @@
 
 set -e
 
-IMAGE_NAME="Affaana/petclinic"
+IMAGE_NAME="affaana/petclinic"
 IMAGE_TAG="${BUILD_NUMBER}"
 
 APP_SERVER="ubuntu@172.31.38.38"
