@@ -32,8 +32,8 @@ pipeline {
 stage('Build Docker Image') {
     steps {
         sh """
-            docker build -t <YOUR_DOCKER_USERNAME>/petclinic:${BUILD_NUMBER} .
-            docker tag <YOUR_DOCKER_USERNAME>/petclinic:${BUILD_NUMBER} <YOUR_DOCKER_USERNAME>/petclinic:latest
+            docker build -t Affaana/petclinic:${BUILD_NUMBER} .
+            docker tag Affaana/petclinic:${BUILD_NUMBER} Affaana/petclinic:latest
         """
     }
 }
