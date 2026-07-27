@@ -45,6 +45,5 @@ sleep 15
 
 echo "Running Health Check..."
 
-curl http://172.31.38.38:8080 >/dev/null
-
+ssh -i ${SSH_KEY} ${APP_SERVER} "curl -f http://localhost:8080 >/dev/null"
 echo "Application is healthy!"
