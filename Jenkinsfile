@@ -29,16 +29,33 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                echo 'Building Docker image...'
-                sh """
-			docker build -t petclinic:${BUILD_NUMBER} .
-			docker tag petclinic:${BUILD_NUMBER} petclinic:latest
+stage('Build Docker Image') {
+    steps {
+        sh """
+            docker build -t <YOUR_DOCKER_USERNAME>/petclinic:${BUILD_NUMBER} .
+            docker tag <YOUR_DOCKER_USERNAME>/petclinic:${BUILD_NUMBER} <YOUR_DOCKER_USERNAME>/petclinic:latest
+        """
+    }
+}
+stage('Push Docker Image') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'dockerhub',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+        )]) {
 
-		"""
-            }
+            sh '''
+                echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+
+                docker push affaana/petclinic:${BUILD_NUMBER}
+                docker push affaana/petclinic:latest
+
+                docker logout
+            '''
         }
+    }
+}
 
         stage('Verify Docker Image') {
             steps {
