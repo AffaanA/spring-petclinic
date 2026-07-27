@@ -5,7 +5,7 @@ set -e
 IMAGE_NAME="Affaana/petclinic"
 IMAGE_TAG="${BUILD_NUMBER}"
 
-APP_SERVER="ubuntu@192.168.56.11"
+APP_SERVER="ubuntu@172.31.38.38"
 SSH_KEY="$HOME/.ssh/id_ed25519_deploy"
 
 echo "===================================="
@@ -45,6 +45,6 @@ sleep 15
 
 echo "Running Health Check..."
 
-curl http://192.168.56.11:8080 >/dev/null
+curl http://172.31.38.38:8080 >/dev/null
 
 echo "Application is healthy!"
