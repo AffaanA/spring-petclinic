@@ -2,68 +2,49 @@
 
 set -e
 
-APP_SERVER="ubuntu@172.31.38.38"
-IMAGE_NAME="petclinic"
+IMAGE_NAME="Affaana/petclinic"
 IMAGE_TAG="${BUILD_NUMBER}"
-IMAGE_FILE="petclinic.tar"
 
-echo "=================================="
-echo "Deploying PetClinic Docker Image"
-echo "=================================="
+APP_SERVER="ubuntu@192.168.56.11"
+SSH_KEY="$HOME/.ssh/id_ed25519_deploy"
 
-echo "[1/5] Saving Docker image..."
+echo "===================================="
+echo "Deploying version ${IMAGE_TAG}"
+echo "===================================="
 
-docker save ${IMAGE_NAME}:${IMAGE_TAG} -o ${IMAGE_FILE}
-
-echo "[2/5] Copying image to App Server..."
-
-scp -i ~/.ssh/id_ed25519_deploy \
-    ${IMAGE_FILE} \
-    ${APP_SERVER}:~/
-
-echo "[3/5] Loading image on App Server..."
-
-ssh -i ~/.ssh/id_ed25519_deploy ${APP_SERVER} <<EOF
+ssh -i ${SSH_KEY} ${APP_SERVER} << EOF
 
 set -e
 
-docker load -i ~/petclinic.tar
+echo "Pulling latest image..."
+docker pull ${IMAGE_NAME}:${IMAGE_TAG}
 
-docker image inspect ${IMAGE_NAME}:${IMAGE_TAG} >/dev/null
-
+echo "Stopping old container..."
 docker stop petclinic || true
+
+echo "Removing old container..."
 docker rm petclinic || true
 
+echo "Starting new container..."
 docker run -d \
     --name petclinic \
+    --restart unless-stopped \
     -p 8080:8080 \
     ${IMAGE_NAME}:${IMAGE_TAG}
 
-rm ~/petclinic.tar
+echo "Cleaning unused Docker images..."
+docker image prune -f
+
+echo "Deployment completed."
 
 EOF
 
-echo "[4/5] Checking application health..."
+echo "Waiting for application..."
 
-ssh -i ~/.ssh/id_ed25519_deploy ${APP_SERVER} <<EOF
+sleep 15
 
-for i in {1..15}
-do
-    if curl -fs http://localhost:8080/actuator/health >/dev/null
-    then
-        echo "Application is healthy."
-        exit 0
-    fi
+echo "Running Health Check..."
 
-    sleep 2
-done
+curl http://192.168.56.11:8080 >/dev/null
 
-echo "Application failed health check."
-exit 1
-
-EOF
-
-echo ""
-echo "=================================="
-echo "Deployment completed successfully."
-echo "=================================="
+echo "Application is healthy!"
