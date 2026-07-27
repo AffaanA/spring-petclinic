@@ -3,36 +3,50 @@
 set -e
 
 APP_SERVER="ubuntu@172.31.38.38"
-APP_DIR="/opt/petclinic"
-SERVICE_NAME="petclinic"
-JAR_FILE=$(ls target/*.jar)
+IMAGE_NAME="petclinic"
+IMAGE_TAG="${BUILD_NUMBER}"
+IMAGE_FILE="petclinic.tar"
 
 echo "=================================="
-echo "Deploying PetClinic"
+echo "Deploying PetClinic Docker Image"
 echo "=================================="
 
-echo "[1/4] Copying JAR to server..."
+echo "[1/5] Saving Docker image..."
+
+docker save ${IMAGE_NAME}:${IMAGE_TAG} -o ${IMAGE_FILE}
+
+echo "[2/5] Copying image to App Server..."
 
 scp -i ~/.ssh/id_ed25519_deploy \
-    "$JAR_FILE" \
-    ${APP_SERVER}:/tmp/petclinic.jar
+    ${IMAGE_FILE} \
+    ${APP_SERVER}:~/
 
-echo "[2/4] Installing application..."
+echo "[3/5] Loading image on App Server..."
 
 ssh -i ~/.ssh/id_ed25519_deploy ${APP_SERVER} <<EOF
-sudo mv /tmp/petclinic.jar ${APP_DIR}/petclinic.jar
-sudo chown petclinic:petclinic ${APP_DIR}/petclinic.jar
+
+set -e
+
+docker load -i ~/petclinic.tar
+
+docker image inspect ${IMAGE_NAME}:${IMAGE_TAG} >/dev/null
+
+docker stop petclinic || true
+docker rm petclinic || true
+
+docker run -d \
+    --name petclinic \
+    -p 8080:8080 \
+    ${IMAGE_NAME}:${IMAGE_TAG}
+
+rm ~/petclinic.tar
+
 EOF
 
-echo "[3/4] Restarting service..."
+echo "[4/5] Checking application health..."
 
 ssh -i ~/.ssh/id_ed25519_deploy ${APP_SERVER} <<EOF
-sudo systemctl restart ${SERVICE_NAME}
-EOF
 
-echo "[4/4] Checking application health..."
-
-ssh -i ~/.ssh/id_ed25519_deploy ${APP_SERVER} <<EOF
 for i in {1..15}
 do
     if curl -fs http://localhost:8080/actuator/health >/dev/null
@@ -46,7 +60,10 @@ done
 
 echo "Application failed health check."
 exit 1
+
 EOF
 
 echo ""
+echo "=================================="
 echo "Deployment completed successfully."
+echo "=================================="

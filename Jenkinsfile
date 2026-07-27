@@ -46,11 +46,11 @@ pipeline {
             }
         }
 
-        // stage('Deploy') {
-        //     steps {
-        //         sh './scripts/deploy.sh'
-        //     }
-        // }
+         stage('Deploy') {
+             steps {
+                 sh './scripts/deploy.sh'
+             }
+         }
 
     }
 
