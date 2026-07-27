@@ -32,7 +32,11 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                sh 'docker build -t petclinic:latest .'
+                sh """
+			docker build -t petclinic:${BUILD_NUMBER} .
+			docker tag petclinic:${BUILD_NUMBER} petclinic:latest
+
+		"""
             }
         }
 
