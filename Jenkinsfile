@@ -1,6 +1,10 @@
 pipeline {
     agent any
-
+environment {
+        IMAGE_NAME = 'affaana/petclinic'
+        APP_SERVER = 'ubuntu@172.31.38.38'
+        SSH_KEY = "${HOME}/.ssh/id_ed25519_deploy"
+    }
     stages {
 
         stage('Checkout') {

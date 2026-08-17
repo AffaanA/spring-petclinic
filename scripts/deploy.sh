@@ -2,11 +2,8 @@
 
 set -e
 
-IMAGE_NAME="affaana/petclinic"
 IMAGE_TAG="${BUILD_NUMBER}"
 
-APP_SERVER="ubuntu@172.31.38.38"
-SSH_KEY="$HOME/.ssh/id_ed25519_deploy"
 
 echo "===================================="
 echo "Deploying version ${IMAGE_TAG}"
