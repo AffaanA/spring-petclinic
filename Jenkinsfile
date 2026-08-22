@@ -17,6 +17,13 @@ pipeline {
                 sh './mvnw clean package -DskipTests'
             }
         }
+
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                sh './mvnw test'
+            }
+        }
     }
 
     post {
