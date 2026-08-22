@@ -28,7 +28,7 @@ pipeline {
 	stage('Build Docker Image') {
 	    steps {
 		echo 'Building Docker Image. . . .'
-		sh 'docker build -t affaana/petclinic:${BUILD_NUMBER}'
+		sh 'docker build -t affaana/petclinic:${BUILD_NUMBER} .'
 	    }
 	}
     }
