@@ -1,0 +1,34 @@
+replicaCount: 4
+
+image:
+  repository: affaana/petclinic
+  tag: "23"
+  pullPolicy: Never
+
+service:
+  type: NodePort
+  port: 8080
+
+config:
+  springProfile: default
+  appEnv: kubernetes
+
+postgresql:
+  auth:
+    username: petclinic
+    password: petclinic123
+    database: petclinic
+
+postgres:
+  image:
+    repository: postgres
+    tag: "16"
+  database: petclinic
+  username: petclinic
+  password: petclinic123
+  storage:
+    accessMode: ReadWriteOnce
+    size: 1Gi
+ingress:
+  className: nginx
+  host: petclinic.local
