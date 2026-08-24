@@ -28,7 +28,12 @@ pipeline {
 	stage('Build Docker Image') {
 	    steps {
 		echo 'Building Docker Image. . . .'
-		sh 'docker build -t affaana/petclinic:${BUILD_NUMBER} affaana/petclinic:latest'
+		sh 'docker build -t affaana/petclinic:${BUILD_NUMBER} .'
+	    }
+	}
+	stage('Tag Docker Image'){
+	    steps {
+		sh 'docker tag affaana/petclinic:${BUILD_NUMBER} affaana/petclininc:latest'
 	    }
 	}
 	stage('Push Docker Image') {
