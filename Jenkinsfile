@@ -46,6 +46,7 @@ pipeline {
             sh '''
                 echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                 docker push affaana/petclinic:${BUILD_NUMBER}
+		docker push affaana/petclinic:latest
                 docker logout
             '''
         }
