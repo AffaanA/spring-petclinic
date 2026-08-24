@@ -52,6 +52,14 @@ pipeline {
         }
     }
 }
+	stage('Deploy to Kubernetes') {
+	   steps {
+		echo 'Deploying to Kubernetes with Helm'
+		sh '''
+		      helm upgrade --install petclinic ./helm/petclinic --set image.tag=${BUILD_NUMBER}
+		'''
+	   }
+	}
     }
 
     post {
