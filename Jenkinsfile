@@ -33,7 +33,7 @@ pipeline {
 	}
 	stage('Tag Docker Image'){
 	    steps {
-		sh 'docker tag affaana/petclinic:${BUILD_NUMBER} affaana/petclininc:latest'
+		sh 'docker tag affaana/petclinic:${BUILD_NUMBER} affaana/petclinic:latest'
 	    }
 	}
 	stage('Push Docker Image') {
