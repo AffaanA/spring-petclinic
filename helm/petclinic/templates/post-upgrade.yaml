@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ include "petclinic.fullname" . }}-post-upgrade"
+  annotations:
+    "helm.sh/hook": post-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: post-upgrade
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - echo "PetClinic Helm upgrade completed successfully!"

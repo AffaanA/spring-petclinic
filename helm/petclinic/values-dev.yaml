@@ -1,0 +1,20 @@
+replicaCount: 1
+
+image:
+  repository: affaana/petclinic
+  tag: "23"
+
+postgresql:
+  auth:
+    username: petclinic
+    password: petclinic123
+    database: petclinic
+
+resources:
+  requests:
+    cpu: "250m"
+    memory: "256Mi"
+
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
