@@ -31,6 +31,22 @@ pipeline {
 		sh 'docker build -t affaana/petclinic:${BUILD_NUMBER} .'
 	    }
 	}
+	stage('Push Docker Image'){
+	    steps {
+		withCredentials([usernamePassword(
+		    credentialsId: 'dockerhub',
+		    usernameVariable: 'DOCKER_USER'
+		    passwordVariable: 'DOCKER_PASS'
+		)]){
+ 		   sh '''
+		   	echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+			docker push affaana/petclinic:${BUILD_NUMBER}
+			docker push affaana/petclinic:latest
+			docker logout
+		   '''
+		}
+	    }
+	}
     }
 
     post {
