@@ -18,6 +18,11 @@ postgresql:
     username: petclinic
     password: petclinic123
     database: petclinic
+autoscaling:
+  enabled: true
+  minReplicas: 4
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 70
 
 postgres:
   image:
