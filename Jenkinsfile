@@ -56,7 +56,7 @@ pipeline {
 	   steps {
 		echo 'Deploying to Kubernetes with Helm'
 		sh '''
-		export KUBECONFIG=/var/jenkins_home/kubeconfig-jenkins
+		export KUBECONFIG=/var/jenkins_home/.kube/config
 		      helm upgrade --install petclinic ./helm/petclinic --set image.tag=${BUILD_NUMBER}
 		'''
 	   }
