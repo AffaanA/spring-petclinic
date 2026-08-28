@@ -18,6 +18,10 @@ postgresql:
     username: petclinic
     password: petclinic123
     database: petclinic
+  primary:
+    networkPolicy:
+      enabled: true
+      allowExternal: false
 autoscaling:
   enabled: true
   minReplicas: 4

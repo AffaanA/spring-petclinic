@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: petclinic-reader-binding
+  namespace: default
+
+subjects:
+  - kind: ServiceAccount
+    name: petclinic
+    namespace: default
+
+roleRef:
+  kind: Role
+  name: petclinic-reader
+  apiGroup: rbac.authorization.k8s.io

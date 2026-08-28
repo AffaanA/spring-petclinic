@@ -18,6 +18,7 @@ spec:
         {{- include "petclinic.selectorLabels" . | nindent 8 }}
 
     spec:
+      serviceAccountName: petclinic
       containers:
         - name: petclinic
 
